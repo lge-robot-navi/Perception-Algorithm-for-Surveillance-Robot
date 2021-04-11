@@ -112,7 +112,7 @@ __C.segmentation.sensors.color = True
 __C.segmentation.sensors.disparity = False
 __C.segmentation.sensors.thermal = False
 __C.segmentation.sensors.infrared = False
-__C.segmentation.sensors.nightvision = False
+__C.segmentation.sensors.nightvision = True
 __C.segmentation.sensors.lidar = False
 
 __C.segmentation.visualization = CN(new_allowed=True)
@@ -139,7 +139,7 @@ __C.detector.sensors.color = True
 __C.detector.sensors.disparity = False
 __C.detector.sensors.thermal = False
 __C.detector.sensors.infrared = False
-__C.detector.sensors.nightvision = False
+__C.detector.sensors.nightvision = True
 __C.detector.sensors.lidar = False
 
 __C.detector.visualization = CN(new_allowed=True)
