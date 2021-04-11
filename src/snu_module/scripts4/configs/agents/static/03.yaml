@@ -51,7 +51,7 @@ segmentation:
 attnet:
     name: "ATT"
     device: 0
-    run: true
+    run: false
 
 detector:
     name: "YOLOv4"
