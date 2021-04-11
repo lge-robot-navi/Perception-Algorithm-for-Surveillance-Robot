@@ -602,6 +602,7 @@ class sensor_params_file_array(sensor_params):
 
         # Set Camera Parameter Matrices
         self.intrinsic_matrix, self.extrinsic_matrix, self.rotation_matrix = None, None, None
+        self.translation_vector = None
 
     # Update Parameter Variables
     def update_params(self, param_array):
@@ -629,6 +630,7 @@ class sensor_params_file_array(sensor_params):
             self.rotation_matrix,
             np.array([self.x, self.y, self.z], dtype=self.param_precision).reshape((3, 1))
         )
+        self.translation_vector = translation_vector
         self.extrinsic_matrix = np.block(
             [np.vstack((self.rotation_matrix, np.zeros((1, 3)))), np.append(translation_vector, 1).reshape(-1, 1)]
         )

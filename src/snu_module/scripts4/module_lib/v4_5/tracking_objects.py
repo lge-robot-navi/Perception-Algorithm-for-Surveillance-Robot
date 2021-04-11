@@ -444,7 +444,34 @@ class Trajectory(object_instance):
                             cam_coord_vel[0][0], cam_coord_vel[1][0], cam_coord_vel[2][0]]).reshape((6, 1))
 
     # Image Coordinates(2D) to Ground Plane in meters (m)
-    def img_coord_to_ground_plane(self, inverse_projection):
+    def img_coord_to_ground_plane(self, sensor_params):
+        # img_coord_pos = np.array([self.x3[0][0], (self.x3[1][0] + 0.5 * self.x3[6][0]), 1.0]).reshape((3, 1))
+        # img_coord_vel = np.array([self.x3[3][0], self.x3[4][0], 1.0]).reshape((3, 1))
+        img_coord_pos = np.array([self.x3[0][0], (self.x3[1][0] + 0.5 * self.x3[6][0])])
+        img_coord_vel = np.array([self.x3[3][0], self.x3[4][0]])
+
+        c_arr = np.array([sensor_params.cx, sensor_params.cy])
+        f_arr = np.array([sensor_params.fx, sensor_params.fy])
+
+        # Normalized Position and Velocity
+        n_img_coord_pos = np.append((img_coord_pos - c_arr) / f_arr, 1).reshape(3, 1)
+        n_img_coord_vel = np.append((img_coord_vel - c_arr) / f_arr, 1).reshape(3, 1)
+
+        # Get Rotation Matrix and Translation Vector
+        R, t = sensor_params.rotation_matrix, sensor_params.translation_vector
+
+        # World Coordinate Conversion
+        w_img_coord_pos = np.matmul(R.T, (n_img_coord_pos - t))
+        w_img_coord_vel = np.matmul(R.T, (n_img_coord_vel - t))
+
+        #
+
+
+        norm_img_coord_pos = np.array([
+            img_coord_pos
+        ])
+
+
         pass
 
     # Camera Coordinates(3D) to Image Coordinates(2D)

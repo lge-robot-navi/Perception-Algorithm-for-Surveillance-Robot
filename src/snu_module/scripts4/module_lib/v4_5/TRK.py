@@ -438,10 +438,13 @@ class SNU_MOT(object):
             # Predict Tracklet States (time-ahead Kalman Prediction)
             trk.predict()
 
-            # Project Image Coordinate State (x3) to Camera Coordinate State (c3)
-            trk.img_coord_to_cam_coord(
-                inverse_projection_matrix=color_P_inverse, opts=self.opts
-            )
+            if self.opts.agent_id != "static":
+                # Project Image Coordinate State (x3) to Camera Coordinate State (c3)
+                trk.img_coord_to_cam_coord(
+                    inverse_projection_matrix=color_P_inverse, opts=self.opts
+                )
+            else:
+                trk.img_coord_to_ground_plane(sensor_params=sync_data_dict["color"].get_sensor_params())
 
             # Compute RPY
             trk.compute_rpy(roll=0.0)
