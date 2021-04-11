@@ -98,6 +98,32 @@ __C.sensors.lidar.rostopic_name = "/osr/lidar_pointcloud"
 __C.sensors.lidar.camerainfo_rostopic_name = "NULL"
 
 # ---------------- #
+# Segmentation Options #
+# ---------------- #
+# TODO: Add options/parameters that can be easily modified while impacting the overall performance
+__C.segmentation = CN(new_allowed=True)
+__C.segmentation.name = "DeepLabv3"
+__C.segmentation.device = 0
+__C.segmentation.run = True
+# __C.segmentation.model_base_path = os.path.join(model_base_path, "segmentation")
+
+__C.segmentation.sensors = CN(new_allowed=False)
+__C.segmentation.sensors.color = True
+__C.segmentation.sensors.disparity = False
+__C.segmentation.sensors.thermal = False
+__C.segmentation.sensors.infrared = False
+__C.segmentation.sensors.nightvision = False
+__C.segmentation.sensors.lidar = False
+
+__C.segmentation.visualization = CN(new_allowed=True)
+__C.segmentation.visualization.is_draw = True
+__C.segmentation.visualization.is_show = True
+__C.segmentation.visualization.auto_save = False
+
+__C.segmentation.visualization.is_result_publish = False
+__C.segmentation.visualization.result_rostopic_name = "/osr/snu_seg_result_image"
+
+# ---------------- #
 # Detector Options #
 # ---------------- #
 # TODO: Add options/parameters that can be easily modified while impacting the overall performance
@@ -124,6 +150,14 @@ __C.detector.visualization.bbox_color = (255, 0, 0)
 
 __C.detector.visualization.is_result_publish = False
 __C.detector.visualization.result_rostopic_name = "/osr/snu_det_result_image"
+
+# ---------------- #
+# Segmentation Options #
+# ---------------- #
+# TODO: Add options/parameters that can be easily modified while impacting the overall performance
+__C.attnet = CN(new_allowed=True)
+__C.attnet.device = 0
+__C.attnet.run = True
 
 # ------------------------------- #
 # Multiple Target Tracker Options #
