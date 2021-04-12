@@ -672,13 +672,16 @@ class sensor_params_file_array(sensor_params):
 
         return _numerator / _denom
 
-
     def get_ground_plane_coord(self, x, y):
         # Normalize Coordinates
         u, v = (x - self.cx) / self.fx, (y - self.cy) / self.fy
 
         # Get Ground k value
         k_G = self.__get_ground_k(u=u, v=v)
+
+        # Compute Ground Plane Coordinate
+        R_T = self.rotation_matrix.T
+
 
         print(22)
 
