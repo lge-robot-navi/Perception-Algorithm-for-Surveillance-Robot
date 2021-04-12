@@ -672,18 +672,25 @@ class sensor_params_file_array(sensor_params):
 
         return _numerator / _denom
 
-    def get_ground_plane_coord(self, x, y):
-        # Normalize Coordinates
-        u, v = (x - self.cx) / self.fx, (y - self.cy) / self.fy
+    def get_ground_plane_coord(self, x, y, norm_mode="pos"):
+        assert norm_mode in ["pos", "vel"]
+        if norm_mode == "pos":
+            # Normalize Coordinates
+            u, v = (x - self.cx) / self.fx, (y - self.cy) / self.fy
 
-        # Get Ground k value
-        k_G = self.__get_ground_k(u=u, v=v)
+            # Get Ground k value
+            k_G = self.__get_ground_k(u=u, v=v)
 
-        # Compute Ground Plane Coordinate
-        R_T = self.rotation_matrix.T
-
-
-        print(22)
+            # Compute Ground Plane Coordinate
+            ground_plane_coord = np.matmul(
+                self.rotation_matrix.T,
+                k_G * np.array([u, v, 1]).reshape(3, 1) - self.translation_vector
+            )
+            return ground_plane_coord
+        else:
+            g1 = self.get_ground_plane_coord(x=x, y=y, norm_mode="pos")
+            g2 = self.get_ground_plane_coord(x=0, y=0, norm_mode="pos")
+            return g1 - g2
 
 
 class snu_SyncSubscriber(SyncSubscriber):
