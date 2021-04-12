@@ -656,6 +656,32 @@ class sensor_params_file_array(sensor_params):
                                     [r31, r32, r33]], dtype=self.param_precision)
         return rotation_matrix
 
+    def get_world_coord_center(self):
+        return -np.matmul(self.rotation_matrix.T, self.translation_vector)
+
+    def __get_ground_k(self, u, v):
+        r13 = self.rotation_matrix[0, 2]
+        r23 = self.rotation_matrix[1, 2]
+        r33 = self.rotation_matrix[2, 2]
+        t1 = self.translation_vector[0, 0]
+        t2 = self.translation_vector[1, 0]
+        t3 = self.translation_vector[2, 0]
+
+        _numerator = t1*r13 + t2*r23 + t3*r33
+        _denom = u*r13 + v*r23 + r33
+
+        return _numerator / _denom
+
+
+    def get_ground_plane_coord(self, x, y):
+        # Normalize Coordinates
+        u, v = (x - self.cx) / self.fx, (y - self.cy) / self.fy
+
+        # Get Ground k value
+        k_G = self.__get_ground_k(u=u, v=v)
+
+        print(22)
+
 
 class snu_SyncSubscriber(SyncSubscriber):
     def __init__(self, ros_sync_switch_dict, options):

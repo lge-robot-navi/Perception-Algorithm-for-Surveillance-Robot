@@ -438,7 +438,7 @@ class SNU_MOT(object):
             # Predict Tracklet States (time-ahead Kalman Prediction)
             trk.predict()
 
-            if self.opts.agent_id != "static":
+            if self.opts.agent_type != "static":
                 # Project Image Coordinate State (x3) to Camera Coordinate State (c3)
                 trk.img_coord_to_cam_coord(
                     inverse_projection_matrix=color_P_inverse, opts=self.opts
