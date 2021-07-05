@@ -421,6 +421,20 @@ class ros_sensor_lidar(ros_sensor):
             self.pc_colors[modal] = cmap(cloud[:, -1] / max_intensity) * 255
 
     def update_data(self, lidar_pc_msg, tf_transform):
+        def get_RT_of_projection(tf_transform):
+            rotation_matrix = pyquaternion.Quaternion(
+                tf_transform.transform.rotation.w,
+                tf_transform.transform.rotation.x,
+                tf_transform.transform.rotation.y,
+                tf_transform.transform.rotation.z,
+            ).rotation_matrix
+            translation_vector = np.array([
+                tf_transform.transform.translation.x,
+                tf_transform.transform.translation.y,
+                tf_transform.transform.translation.z
+            ]).reshape(3, 1)
+            return rotation_matrix, translation_vector
+
         # Update LiDAR Message
         self.raw_pc_msg = lidar_pc_msg
 
@@ -443,11 +457,14 @@ class ros_sensor_lidar(ros_sensor):
         #         tf_transform.transform.translation.z
         #     ]).reshape(3, 1)
 
-        # Update Rotation and Translation
-        self.R["color"], self.T["color"] = \
-            tf_transform.get_transform(src_sensor="lidar", dest_sensor="color")
-        self.R["thermal"], self.T["thermal"] = \
-            tf_transform.get_transform(src_sensor="lidar", dest_sensor="thermal")
+        self.R["color"], self.T["color"] = get_RT_of_projection(tf_transform["color"])
+        self.R["thermal"], self.T["thermal"] = get_RT_of_projection(tf_transform["thermal"])
+
+        # # Update Rotation and Translation
+        # self.R["color"], self.T["color"] = \
+        #     tf_transform.get_transform(src_sensor="lidar", dest_sensor="color")
+        # self.R["thermal"], self.T["thermal"] = \
+        #     tf_transform.get_transform(src_sensor="lidar", dest_sensor="thermal")
 
         # Project Point Cloud
         pc = np.array(ros_numpy.numpify(self.raw_pc_msg).tolist())
